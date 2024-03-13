@@ -21,6 +21,7 @@ app.frame("/", (c) => {
   const text = queryParams?.text
     ? queryParams.text
     : `You need to specify a text query parameter. Example: \n {{app-url}}?text=Hello%20World!&color=orange`;
+  const size = queryParams?.size ? queryParams.size : 60;
   console.log("color:", color);
   console.log("text:", text);
   return c.res({
@@ -42,7 +43,7 @@ app.frame("/", (c) => {
         <div
           style={{
             color: "white",
-            fontSize: 60,
+            fontSize: size,
             fontStyle: "normal",
             letterSpacing: "-0.025em",
             lineHeight: 1.4,
