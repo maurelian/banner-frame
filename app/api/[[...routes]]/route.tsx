@@ -1,68 +1,63 @@
 /** @jsxImportSource frog/jsx */
 
-import { Button, Frog, TextInput } from 'frog'
+import { Button, Frog, TextInput } from "frog";
 // import { neynar } from 'frog/hubs'
-import { handle } from 'frog/next'
+import { handle } from "frog/next";
 
 const app = new Frog({
-  assetsPath: '/',
-  basePath: '/api',
+  assetsPath: "/",
+  basePath: "/api",
   // Supply a Hub to enable frame verification.
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
-})
+});
 
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
 
-app.frame('/', (c) => {
-  const { buttonValue, inputText, status } = c
-  const fruit = inputText || buttonValue
+app.frame("/", (c) => {
+  const queryParams = c.req.query();
+  const color = queryParams?.color ? queryParams.color : "black";
+  console.log("Query Parameters:", JSON.stringify(queryParams, null, 2));
+  const text = queryParams?.text
+    ? queryParams.text
+    : `You need to specify a text query parameter. Example: \n {{app-url}}?text=Hello%20World!&color=orange`;
+  console.log("color:", color);
+  console.log("text:", text);
   return c.res({
     image: (
       <div
         style={{
-          alignItems: 'center',
-          background:
-            status === 'response'
-              ? 'linear-gradient(to right, #432889, #17101F)'
-              : 'black',
-          backgroundSize: '100% 100%',
-          display: 'flex',
-          flexDirection: 'column',
-          flexWrap: 'nowrap',
-          height: '100%',
-          justifyContent: 'center',
-          textAlign: 'center',
-          width: '100%',
+          alignItems: "center",
+          background: color,
+          backgroundSize: "100% 100%",
+          display: "flex",
+          flexDirection: "column",
+          flexWrap: "nowrap",
+          height: "100%",
+          justifyContent: "center",
+          textAlign: "center",
+          width: "100%",
         }}
       >
         <div
           style={{
-            color: 'white',
+            color: "white",
             fontSize: 60,
-            fontStyle: 'normal',
-            letterSpacing: '-0.025em',
+            fontStyle: "normal",
+            letterSpacing: "-0.025em",
             lineHeight: 1.4,
             marginTop: 30,
-            padding: '0 120px',
-            whiteSpace: 'pre-wrap',
+            padding: "0 120px",
+            whiteSpace: "pre-wrap",
           }}
         >
-          {status === 'response'
-            ? `Nice choice.${fruit ? ` ${fruit.toUpperCase()}!!` : ''}`
-            : 'Welcome!'}
+          {text}
         </div>
       </div>
     ),
-    intents: [
-      <TextInput placeholder="Enter custom fruit..." />,
-      <Button value="apples">Apples</Button>,
-      <Button value="oranges">Oranges</Button>,
-      <Button value="bananas">Bananas</Button>,
-      status === 'response' && <Button.Reset>Reset</Button.Reset>,
-    ],
-  })
-})
+    intents: [],
+  });
+});
 
-export const GET = handle(app)
-export const POST = handle(app)
+export const GET = handle(app);
+export const POST = handle(app);
